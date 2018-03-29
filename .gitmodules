@@ -1,3 +1,0 @@
-[submodule "lib/mongodb-php-odm"]
-	path = lib/mongodb-php-odm
-	url = git://github.com/colinmollenhour/mongodb-php-odm.git
