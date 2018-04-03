@@ -1,15 +1,16 @@
 <?php
+
 /**
  * Piggyback EAV but use Mongo for storage
  *
- * NOT COMPLETE AND NOT WORKING 
+ * NOT COMPLETE AND NOT WORKING
  */
 abstract class Cm_Mongo_Model_Entity
     extends Mage_Eav_Model_Entity_Abstract
 {
 
     const DEFAULT_ENTITY_ID_FIELD = '_id';
-    
+
     /**
      * Resource initialization
      */
@@ -43,7 +44,7 @@ abstract class Cm_Mongo_Model_Entity
      */
     public function isAttributeStatic($attribute)
     {
-      return TRUE;
+        return TRUE;
     }
 
     /**
@@ -56,7 +57,7 @@ abstract class Cm_Mongo_Model_Entity
     public function checkAttributeUniqueValue(Mage_Eav_Model_Entity_Attribute_Abstract $attribute, $object)
     {
         $value = $object->getData($attribute->getAttributeCode());
-        if ($attribute->getBackend()->getType() == 'datetime'){
+        if ($attribute->getBackend()->getType() == 'datetime') {
             $date = new Zend_Date($value);
             $value = $date->toString(Varien_Date::DATETIME_INTERNAL_FORMAT);
         }
@@ -72,9 +73,8 @@ abstract class Cm_Mongo_Model_Entity
                 return $data[$this->getEntityIdField()] == $object->getId();
             }
             return true;
-        }
-        else {
-            return ! $data;
+        } else {
+            return !$data;
         }
     }
 
@@ -86,7 +86,7 @@ abstract class Cm_Mongo_Model_Entity
      * @param   array|null $attributes
      * @return  Mage_Eav_Model_Entity_Abstract
      */
-    public function load($object, $entityId, $attributes=array())
+    public function load($object, $entityId, $attributes = array())
     {
         /**
          * Load object base row data
@@ -161,14 +161,14 @@ abstract class Cm_Mongo_Model_Entity
      */
     protected function _collectSaveData($newObject)
     {
-        $newData   = $newObject->getData();
-        $entityId  = $newObject->getData($this->getEntityIdField());
+        $newData = $newObject->getData();
+        $entityId = $newObject->getData($this->getEntityIdField());
 
         // define result data
-        $entityRow  = array();
-        $insert     = array();
-        $update     = array();
-        $delete     = array();
+        $entityRow = array();
+        $insert = array();
+        $update = array();
+        $delete = array();
 
         if (!empty($entityId)) {
             $origData = $newObject->getOrigData();
@@ -183,7 +183,7 @@ abstract class Cm_Mongo_Model_Entity
              * drop attributes that are unknown in new data
              * not needed after introduction of partial entity loading
              */
-            if($origData) {
+            if ($origData) {
                 foreach ($origData as $k => $v) {
                     if (!array_key_exists($k, $newData)) {
                         unset($origData[$k]);
@@ -248,32 +248,27 @@ abstract class Cm_Mongo_Model_Entity
         $insert = $saveData['insert'];
         $update = $saveData['update'];
         $delete = $saveData['delete'];
-        $entityIdField  = $this->getEntityIdField();
-        $entityId       = $newObject->getId();
-        $condition      = array($entityIdField => $entityId);
+        $entityIdField = $this->getEntityIdField();
+        $entityId = $newObject->getId();
+        $condition = array($entityIdField => $entityId);
 
         // Upsert when status is unknown
         if ($object->isNewObject() === NULL) {
-          $this->_getWriteAdapter()->getCollection($this->getEntityTable())
-            ->update($condition, $insert+$update, array('upsert' => TRUE, 'multiple' => FALSE, 'safe' => TRUE));
-        }
-        
-        // Insert new objects
-        else if($object->isNewObject()) {
-          if($update) {
             $this->_getWriteAdapter()->getCollection($this->getEntityTable())
-              ->update($insert, $update, array('upsert' => TRUE, 'multiple' => FALSE, 'safe' => TRUE));
-          }
-          else {
-            $this->_getWriteAdapter()->getCollection($this->getEntityTable())
-              ->insert($insert, array('safe' => TRUE));
-          }
-        }
-
-        // Update existing objects
+                ->update($condition, $insert + $update, array('upsert' => TRUE, 'multiple' => FALSE, 'safe' => TRUE));
+        } // Insert new objects
+        else if ($object->isNewObject()) {
+            if ($update) {
+                $this->_getWriteAdapter()->getCollection($this->getEntityTable())
+                    ->update($insert, $update, array('upsert' => TRUE, 'multiple' => FALSE, 'safe' => TRUE));
+            } else {
+                $this->_getWriteAdapter()->getCollection($this->getEntityTable())
+                    ->insert($insert, array('safe' => TRUE));
+            }
+        } // Update existing objects
         else {
             $this->_getWriteAdapter()->getCollection($this->getEntityTable())
-              ->update($condition, $insert+$update, array('multiple' => FALSE, 'safe' => TRUE));
+                ->update($condition, $insert + $update, array('multiple' => FALSE, 'safe' => TRUE));
         }
 
         /**
@@ -363,23 +358,23 @@ abstract class Cm_Mongo_Model_Entity
 
         $condition = array($object->getIdFieldName() => $object->getId());
 
-        if ( ! is_null($newValue)) {
+        if (!is_null($newValue)) {
             $operation = array('$set' => array($attributeCode => $newValue));
         } else {
             $operation = array('$unset' => array($attributeCode => 1));
         }
         $this->_getWriteAdapter()->getCollection($this->getEntityTable())
-          ->update($condition, $operation, array('multiple' => FALSE, 'safe' => TRUE));
+            ->update($condition, $operation, array('multiple' => FALSE, 'safe' => TRUE));
 
         return $this;
     }
 
-  /**
-   * Delete entity using current object's data
-   *
-   * @param $object
-   * @return Mage_Eav_Model_Entity_Abstract
-   */
+    /**
+     * Delete entity using current object's data
+     *
+     * @param $object
+     * @return Mage_Eav_Model_Entity_Abstract
+     */
     public function delete($object)
     {
         if (is_numeric($object)) {

@@ -1,156 +1,158 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
-  
-  <modules>
-    <Cm_Mongo>
-      <version>0.1.0</version>
-    </Cm_Mongo>
-  </modules>
-  
-  <global>
-    
-    <resources>
-      <mongo_setup>
-        <setup>
-          <module>Cm_Mongo</module>
-          <class>Cm_Mongo_Model_Resource_Setup</class>
-        </setup>
-        <connection>
-          <model>mongo</model>
-          <config>default</config>
-          <server>localhost</server>
-          <database>magento</database>
-          <type>mongo</type>
-          <active>1</active>
-        </connection>
-      </mongo_setup>
-      <mongo_read>
-        <connection>
-          <use>mongo_setup</use>
-        </connection>
-      </mongo_read>
-      <mongo_write>
-        <connection>
-          <use>mongo_setup</use>
-        </connection>
-      </mongo_write>
-    </resources>
-    
-    <resource>
-      <connection>
-        <types>
-          <mongo>
-            <class>Cm_Mongo_Model_Resource_Type_Mongo</class>
-          </mongo>
-        </types>
-      </connection>
-    </resource>
-    
-    <cache>
-      <types>
-        <mongo_schema translate="label,description" module="Cm_Mongo">
-          <label>Mongo Schema Registry</label>
-          <description>Mongo Schema description files (mongo.xml).</description>
-          <tags>MONGO_SCHEMA</tags>
-        </mongo_schema>
-      </types>
-    </cache>
 
-    <blocks>
-      <mongo>
-        <class>Cm_Mongo_Block</class>
-      </mongo>
-    </blocks>
-    
-    <helpers>
-      <mongo>
-        <class>Cm_Mongo_Helper</class>
-      </mongo>
-    </helpers>
-    
-    <models>
-      <mongo>
-        <class>Cm_Mongo_Model</class>
-        <resourceModel>mongo_mongo</resourceModel>
-      </mongo>
-      <mongo_mongo>
-        <class>Cm_Mongo_Model_Mongo</class>
-      </mongo_mongo>
-    </models>
+    <modules>
+        <Cm_Mongo>
+            <version>0.1.0</version>
+        </Cm_Mongo>
+    </modules>
 
-    <index>
-      <indexer>
-        <mongo_general_indexer>
-          <model>mongo/indexer</model>
-        </mongo_general_indexer>
-      </indexer>
-    </index>
-    
-  </global>
-  
-  <admin>
-    <routers>
-      <adminhtml>
-        <args>
-          <modules>
-            <Cm_Mongo>Cm_Mongo_Adminhtml</Cm_Mongo>
-          </modules>
-        </args>
-      </adminhtml>
-    </routers>
-  </admin>
+    <global>
 
-  <adminhtml>
-    <layout>
-      <updates>
-        <mongo module="Cm_Mongo">
-          <file>mongo.xml</file>
-        </mongo>
-      </updates>
-    </layout>
-  </adminhtml>
+        <resources>
+            <mongo_setup>
+                <setup>
+                    <module>Cm_Mongo</module>
+                    <class>Cm_Mongo_Model_Resource_Setup</class>
+                </setup>
+                <connection>
+                    <model>mongo</model>
+                    <config>default</config>
+                    <server>localhost</server>
+                    <database>magento</database>
+                    <type>mongo</type>
+                    <active>1</active>
+                </connection>
+            </mongo_setup>
+            <mongo_read>
+                <connection>
+                    <use>mongo_setup</use>
+                </connection>
+            </mongo_read>
+            <mongo_write>
+                <connection>
+                    <use>mongo_setup</use>
+                </connection>
+            </mongo_write>
+        </resources>
 
-  <frontend>
-    <layout>
-      <updates>
-        <mongo module="Cm_Mongo">
-          <file>mongo.xml</file>
-        </mongo>
-      </updates>
-    </layout>
-  </frontend>
+        <resource>
+            <connection>
+                <types>
+                    <mongo>
+                        <class>Cm_Mongo_Model_Resource_Type_Mongo</class>
+                    </mongo>
+                </types>
+            </connection>
+        </resource>
 
-  <crontab>
-    <jobs>
-      <mongo_queue>
-        <!--<schedule><cron_expr>*/4 * * * *</cron_expr></schedule>-->
-        <run><model>mongo/job::runCron</model></run>
-      </mongo_queue>
-    </jobs>
-  </crontab>
+        <cache>
+            <types>
+                <mongo_schema translate="label,description" module="Cm_Mongo">
+                    <label>Mongo Schema Registry</label>
+                    <description>Mongo Schema description files (mongo.xml).</description>
+                    <tags>MONGO_SCHEMA</tags>
+                </mongo_schema>
+            </types>
+        </cache>
 
-  <!-- See Cm_Mongo_Model_Job for more info -->
-  <mongo_queue>
-  </mongo_queue>
+        <blocks>
+            <mongo>
+                <class>Cm_Mongo_Block</class>
+            </mongo>
+        </blocks>
 
-  <default>
-    <system>
-      <mongo_queue>
-        <cron_enabled>0</cron_enabled>
-        <limit>50</limit>
-        <time>10</time>
-      </mongo_queue>
-    </system>
-  </default>
+        <helpers>
+            <mongo>
+                <class>Cm_Mongo_Helper</class>
+            </mongo>
+        </helpers>
 
-  <!-- Extend the default ecomdev_phpunit/fixture model for "collections" section in fixtures -->
-  <!-- Currently, you must add <depends><EcomDev_PHPUnit/></depends> to Cm_Mongo.xml for this to take effect. -->
-  <phpunit>
-    <suite>
-      <fixture>
-        <model>mongo/fixture</model>
-      </fixture>
-    </suite>
-  </phpunit>
+        <models>
+            <mongo>
+                <class>Cm_Mongo_Model</class>
+                <resourceModel>mongo_mongo</resourceModel>
+            </mongo>
+            <mongo_mongo>
+                <class>Cm_Mongo_Model_Mongo</class>
+            </mongo_mongo>
+        </models>
+
+        <index>
+            <indexer>
+                <mongo_general_indexer>
+                    <model>mongo/indexer</model>
+                </mongo_general_indexer>
+            </indexer>
+        </index>
+
+    </global>
+
+    <admin>
+        <routers>
+            <adminhtml>
+                <args>
+                    <modules>
+                        <Cm_Mongo>Cm_Mongo_Adminhtml</Cm_Mongo>
+                    </modules>
+                </args>
+            </adminhtml>
+        </routers>
+    </admin>
+
+    <adminhtml>
+        <layout>
+            <updates>
+                <mongo module="Cm_Mongo">
+                    <file>mongo.xml</file>
+                </mongo>
+            </updates>
+        </layout>
+    </adminhtml>
+
+    <frontend>
+        <layout>
+            <updates>
+                <mongo module="Cm_Mongo">
+                    <file>mongo.xml</file>
+                </mongo>
+            </updates>
+        </layout>
+    </frontend>
+
+    <crontab>
+        <jobs>
+            <mongo_queue>
+                <!--<schedule><cron_expr>*/4 * * * *</cron_expr></schedule>-->
+                <run>
+                    <model>mongo/job::runCron</model>
+                </run>
+            </mongo_queue>
+        </jobs>
+    </crontab>
+
+    <!-- See Cm_Mongo_Model_Job for more info -->
+    <mongo_queue>
+    </mongo_queue>
+
+    <default>
+        <system>
+            <mongo_queue>
+                <cron_enabled>0</cron_enabled>
+                <limit>50</limit>
+                <time>10</time>
+            </mongo_queue>
+        </system>
+    </default>
+
+    <!-- Extend the default ecomdev_phpunit/fixture model for "collections" section in fixtures -->
+    <!-- Currently, you must add <depends><EcomDev_PHPUnit/></depends> to Cm_Mongo.xml for this to take effect. -->
+    <phpunit>
+        <suite>
+            <fixture>
+                <model>mongo/fixture</model>
+            </fixture>
+        </suite>
+    </phpunit>
 
 </config>
