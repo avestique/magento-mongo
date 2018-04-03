@@ -168,18 +168,17 @@ class Mongo_Database {
     $this->_name = $name;
 
     // Setup connection options merged over the defaults and store the connection
-    $options = array(
-      'connect' => FALSE  // Do not connect yet
-    );
+    $options = [];
+
     if(isset($config['options']))
       $options = array_merge($options, $config['options']);
 
     // Use the default server string if no server option is given
-    $server = !isset($config['server'])
+    $server = isset($config['server'])
                 ? $config['server']
-                : "mongodb://".ini_get('mongo.default_host').":".ini_get('mongo.default_port');
+                : ini_get('mongo.default_host').":".ini_get('mongo.default_port');
 
-    $this->_connection = new MongoDB\Driver\Manager($server, $options);
+    $this->_connection = new MongoDB\Driver\Manager("mongodb://" . $server, $options);
 
     // Save the database name for later use
     $this->_db = $config['database'];
@@ -226,10 +225,10 @@ class Mongo_Database {
     {
       if($this->profiling)
       {
-        $_bm = $this->profiler_start("Mongo_Database::{$this->_name}","connect()");
+        $_bm = $this->profiler_start("MongoDB\\Driver\\Manager::{$this->_name}","connect()");
       }
 
-      $this->_connected = $this->_connection->connect();
+      $this->_connected = $this->_connection;
 
       if ( isset($_bm))
       {

@@ -18,10 +18,12 @@
                 <connection>
                     <model>mongo</model>
                     <config>default</config>
-                    <server>localhost</server>
+                    <server>localhost:27017</server>
                     <database>magento</database>
                     <type>mongo</type>
                     <active>1</active>
+                    <collection></collection>
+                    <profiling></profiling>
                 </connection>
             </mongo_setup>
             <mongo_read>

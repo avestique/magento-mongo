@@ -58,7 +58,9 @@ class Cm_Mongo_Adminhtml_EnumController extends Mage_Adminhtml_Controller_Action
                 $this->_redirect('*/*/');
                 return;
             }
-
+echo '<pre><br/>';
+var_dump('!');
+die();
             $model->load($id);
 
             try {
