@@ -327,7 +327,9 @@ abstract class Cm_Mongo_Model_Resource_Abstract extends Mage_Core_Model_Resource
                 $query[$field] = $this->castToMongoNested($field, $value);
             }
         }
-
+        echo '<pre><br/>';
+        var_dump('!');
+        die();
         return $this->_getReadCollection()->findOne($query, $fields);
     }
 

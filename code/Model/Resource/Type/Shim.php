@@ -60,6 +60,8 @@ class Cm_Mongo_Model_Resource_Type_Shim implements Varien_Db_Adapter_Interface
      */
     public function getConnection()
     {
+        mageDebugBacktrace();
+        die();
         $this->_connect();
         return $this->_connection;
     }
