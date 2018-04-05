@@ -703,7 +703,7 @@ class Mongo_Collection implements Iterator, Countable
       $keys = array($keys => 1);
     }
     if( ! $reduce instanceof MongoCode) {
-      $reduce = new MongoCode($reduce);
+      $reduce = new \MongoDB\BSON\Javascript($reduce);
     }
     $result = $this->__call('group', array($keys, $initial, $reduce, $options));
     if( empty($result['ok'])) {
@@ -724,7 +724,7 @@ class Mongo_Collection implements Iterator, Countable
    * @param array $criteria
    * @param array $update
    * @param array $options
-   * @return bool|int|MongoId
+   * @return bool|int|\MongoDB\BSON\ObjectId
    * @throws MongoException on error
    */
   public function update_safe($criteria, $update, $options = array())

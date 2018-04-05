@@ -15,16 +15,6 @@
                     <module>Cm_Mongo</module>
                     <class>Cm_Mongo_Model_Resource_Setup</class>
                 </setup>
-                <connection>
-                    <model>mongo</model>
-                    <config>default</config>
-                    <server>localhost:27017</server>
-                    <database>magento</database>
-                    <type>mongo</type>
-                    <active>1</active>
-                    <collection></collection>
-                    <profiling></profiling>
-                </connection>
             </mongo_setup>
             <mongo_read>
                 <connection>

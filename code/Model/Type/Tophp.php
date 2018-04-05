@@ -33,33 +33,33 @@ class Cm_Mongo_Model_Type_Tophp
 
     public function MongoId($mapping, $value)
     {
-        if ($value instanceof MongoId) {
+        if ($value instanceof \MongoDB\BSON\ObjectId) {
             return $value;
         }
         if (is_string($value)) {
-            return new MongoId($value);
+            return new \MongoDB\BSON\ObjectId($value);
         }
         return NULL;
     }
 
     public function MongoDate($mapping, $value)
     {
-        if ($value instanceof MongoDate) {
+        if ($value instanceof \MongoDB\BSON\UTCDateTime) {
             return $value;
         } else if (is_array($value) && isset($value['sec'])) {
-            return new MongoDate($value['sec'], isset($value['usec']) ? $value['usec'] : 0);
+            return new \MongoDB\BSON\UTCDateTime($value['sec'], isset($value['usec']) ? $value['usec'] : 0);
         }
 
         $value = $this->timestamp($mapping, $value);
         if ($value === NULL) {
             return NULL;
         }
-        return new MongoDate((int)$value);
+        return new \MongoDB\BSON\UTCDateTime((int)$value);
     }
 
     public function timestamp($mapping, $value)
     {
-        if ($value instanceof MongoDate) {
+        if ($value instanceof \MongoDB\BSON\UTCDateTime) {
             return $value->sec;
         } else if ($value === NULL) {
             return NULL;

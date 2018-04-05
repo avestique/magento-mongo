@@ -22,7 +22,7 @@ class Cm_Mongo_Model_Mongo_Job extends Cm_Mongo_Model_Resource_Abstract
             'findAndModify' => $this->_collectionName,
             'query' => array(
                 'status' => Cm_Mongo_Model_Job::STATUS_READY,
-                'execute_at' => array('$lte' => new MongoDate),
+                'execute_at' => array('$lte' => new \MongoDB\BSON\UTCDateTime),
             ),
             'sort' => array(
                 'priority' => 1,

@@ -1,7 +1,121 @@
 <?php
-
-class Cm_Mongo_Model_Resource_Type_Shim extends Mongo_Database implements Varien_Db_Adapter_Interface
+//Cm_Mongo_Model_Resource_Type_Mongo
+class Cm_Mongo_Model_Resource_Type_Shim implements Varien_Db_Adapter_Interface
 {
+    protected $_connection;
+
+    public function __construct($config)
+    {
+        /*
+         * Verify that adapter parameters are in an array.
+         */
+        if (!is_array($config)) {
+            /*
+             * Convert Zend_Config argument to a plain array.
+             */
+            if ($config instanceof Zend_Config) {
+                $config = $config->toArray();
+            } else {
+                /**
+                 * @see Zend_Db_Adapter_Exception
+                 */
+                #require_once 'Zend/Db/Adapter/Exception.php';
+                throw new Zend_Db_Adapter_Exception('Adapter parameters must be in an array or a Zend_Config object');
+            }
+        }
+
+        $this->_checkRequiredOptions($config);
+
+        $options = [];
+
+        $driverOptions = [];
+
+        /*
+         * normalize the config and merge it with the defaults
+         */
+        if (array_key_exists('options', $config)) {
+            // can't use array_merge() because keys might be integers
+            foreach ((array) $config['options'] as $key => $value) {
+                $options[$key] = $value;
+            }
+        }
+        if (array_key_exists('driver_options', $config)) {
+            if (!empty($config['driver_options'])) {
+                // can't use array_merge() because keys might be integers
+                foreach ((array) $config['driver_options'] as $key => $value) {
+                    $driverOptions[$key] = $value;
+                }
+            }
+        }
+        $this->_config = array_merge($this->_config, $config);
+        $this->_config['options'] = $options;
+        $this->_config['driver_options'] = $driverOptions;
+    }
+
+    /**
+     * Returns the underlying database connection object or resource.
+     * If not presently connected, this initiates the connection.
+     *
+     * @return object|resource|null
+     */
+    public function getConnection()
+    {
+        $this->_connect();
+        return $this->_connection;
+    }
+
+    protected function _connect()
+    {
+        if ($this->_connection) {
+            return;
+        }
+
+        // check for PDO extension
+        if (!extension_loaded('mongodb')) {
+            /**
+             * @see Zend_Db_Adapter_Exception
+             */
+            #require_once 'Zend/Db/Adapter/Exception.php';
+            throw new Zend_Db_Adapter_Exception('The mongodb extension is required for this adapter but the extension is not loaded');
+        }
+
+        try {
+            $host = $this->_config['host'];
+            $port = $this->_config['port']??27017;
+
+            $this->_connection = new MongoDB\Driver\Manager("mongodb://$host:$port/", $this->_config['options'], $this->_config['driver_options']);
+            
+        } catch (PDOException $e) {
+echo '<pre><br/>';
+var_dump($e->getMessage());
+die();
+        }
+    }
+
+    /**
+     * Check for config options that are mandatory.
+     * Throw exceptions if any are missing.
+     *
+     * @param array $config
+     * @throws Zend_Db_Adapter_Exception
+     */
+    protected function _checkRequiredOptions(array $config)
+    {
+        // we need at least a dbname
+        if (! array_key_exists('dbname', $config)) {
+            /** @see Zend_Db_Adapter_Exception */
+            #require_once 'Zend/Db/Adapter/Exception.php';
+            throw new Zend_Db_Adapter_Exception("Configuration array must have a key for 'dbname' that names the database instance");
+        }
+
+        if (! array_key_exists('host', $config)) {
+            /**
+             * @see Zend_Db_Adapter_Exception
+             */
+            #require_once 'Zend/Db/Adapter/Exception.php';
+            throw new Zend_Db_Adapter_Exception("Configuration array must have a key for 'host' for login credentials");
+        }
+    }
 
     /**
      * Begin new DB transaction for connection

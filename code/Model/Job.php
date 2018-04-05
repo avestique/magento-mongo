@@ -168,7 +168,7 @@ class Cm_Mongo_Model_Job extends Cm_Mongo_Model_Abstract
      * Schedule a retry based on the parameters or the task configuration.
      * This is automatically called if an exception is thrown and canRetry() is true.
      *
-     * @param null|string|int|MongoDate $time A strtotime compatible string, a unix timestamp or a MongoDate
+     * @param null|string|int|\MongoDB\BSON\UTCDateTime $time A strtotime compatible string, a unix timestamp or a \MongoDB\BSON\UTCDateTime
      * @return Cm_Mongo_Model_Job
      */
     public function scheduleRetry($time = NULL)
@@ -177,17 +177,17 @@ class Cm_Mongo_Model_Job extends Cm_Mongo_Model_Abstract
 
         // Update the execute_at time
         if ($time === NULL) {
-            $time = new MongoDate;
+            $time = new \MongoDB\BSON\UTCDateTime;
             $schedule = (string)$this->getTaskConfig('retry_schedule');
             if ($schedule) {
                 $schedule = preg_split('/\s*,\s*/', $schedule, null, PREG_SPLIT_NO_EMPTY);
                 $modifier = isset($schedule[$retries]) ? $schedule[$retries] : end($schedule);
-                $time = new MongoDate(strtotime($modifier, $time->sec));
+                $time = new \MongoDB\BSON\UTCDateTime(strtotime($modifier, $time->sec));
             }
         } else if (is_string($time)) {
-            $time = new MongoDate(strtotime($time));
+            $time = new \MongoDB\BSON\UTCDateTime(strtotime($time));
         } else if (is_int($time)) {
-            $time = new MongoDate($time);
+            $time = new \MongoDB\BSON\UTCDateTime($time);
         }
 
         // Update the priority unless it was already set explicitly
@@ -222,7 +222,7 @@ class Cm_Mongo_Model_Job extends Cm_Mongo_Model_Abstract
                 "Error: $e";
             Mage::log($message, Zend_Log::DEBUG, $logfile);
         }
-        $this->op('$push', 'error_log', array('time' => new MongoDate(), 'message' => "$e"));
+        $this->op('$push', 'error_log', array('time' => new \MongoDB\BSON\UTCDateTime(), 'message' => "$e"));
         return $this;
     }
 

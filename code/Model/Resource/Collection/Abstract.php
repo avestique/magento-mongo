@@ -826,7 +826,7 @@ class Cm_Mongo_Model_Resource_Collection_Abstract extends Cm_Mongo_Collection
                     $query = $query . '$';
                 }
                 $query = trim($query, '%');
-                $query = array($fieldName => new MongoRegex('/' . str_replace('%', '.*', $query) . '/i'));
+                $query = array($fieldName => new \MongoDB\BSON\Regex('/' . str_replace('%', '.*', $query) . '/i'));
             } elseif (array_key_exists('nlike', $condition)) {
                 $query = preg_quote($condition['nlike']);
                 $query = str_replace('\_', '_', $query); // unescape SQL syntax
@@ -837,7 +837,7 @@ class Cm_Mongo_Model_Resource_Collection_Abstract extends Cm_Mongo_Collection
                     $query = $query . '$';
                 }
                 $query = trim($query, '%');
-                $query = array($fieldName => array('$not' => new MongoRegex('/' . str_replace('%', '.*', $query) . '/i')));
+                $query = array($fieldName => array('$not' => new \MongoDB\BSON\Regex('/' . str_replace('%', '.*', $query) . '/i')));
             } // Test null by type
             elseif (array_key_exists('notnull', $condition)) {
                 $query = array($fieldName => array('$not' => array('$type' => Mongo_Database::TYPE_NULL)));

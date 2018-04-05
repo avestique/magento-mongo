@@ -16,7 +16,7 @@ class Cm_Mongo_Block_Adminhtml_Widget_Grid_Column_Renderer_Datetime extends Mage
     {
         if ($data = $this->_getValue($row)) {
             try {
-                if ($data instanceof MongoDate) {
+                if ($data instanceof \MongoDB\BSON\UTCDateTime) {
                     $date = new Zend_Date($data->sec, null, Mage::app()->getLocale()->getLocale());
                 } else if ($data instanceof Zend_Date) {
                     $date = $data;

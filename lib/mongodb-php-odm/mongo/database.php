@@ -314,7 +314,7 @@ class Mongo_Database {
   public function execute_safe( $code, array $args = array(), $scope = array() )
   {
     if( ! $code instanceof MongoCode) {
-      $code = new MongoCode($code, $scope);
+      $code = new \MongoDB\BSON\Javascript($code, $scope);
     }
     $result = $this->execute($code, $args);
     if( empty($result['ok']) )

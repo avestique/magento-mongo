@@ -50,7 +50,7 @@ class Cm_Mongo_Collection extends Varien_Data_Collection
      */
     protected function _getItemKey($id)
     {
-        if ($id instanceof MongoId) {
+        if ($id instanceof \MongoDB\BSON\ObjectId) {
             return (string)$id;
         }
         return $id;
